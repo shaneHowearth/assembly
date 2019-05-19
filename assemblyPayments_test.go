@@ -1,6 +1,7 @@
 package main
 
 import (
+    "errors"
 	"fmt"
 	"testing"
 
@@ -49,6 +50,8 @@ func ExampleHelp() {
 	//    Help - Prints this message.
 	//    Bal - Gets the current bank balances.
 	//        If a name is given then only the bank balance for that person.
+	//    Bid - Bid for a book.
+	//        Give the name of the person bidding, the name of the book they are bidding for, and the amount that they are bidding. If successful the book will change ownership, and the money paid from the bidder's wallet to the seller's.
 	//    Books - List all the books for sale, or all of the books owned by the given name.
 	//    Transactions - Get all of the transactions that have occurred.
 	//    Exit - Exits this program.
@@ -85,6 +88,103 @@ func TestGetBankBalance(t *testing.T) {
 		assert.Equalf(t, tc.response, resp, "%s response was incorrect", name)
 	}
 
+}
+
+func TestBid(t *testing.T) {
+
+	testcases := map[string]struct {
+		seller      *User
+		buyer       *User
+		owner       *User
+		book        *Book
+		arguments   string
+		buyerBal    *money.Money
+		sellerBal   *money.Money
+		status      bool
+		expectedErr error
+	}{
+		"Successful Bid": {
+			seller:    testUsers[0],
+			buyer:     testUsers[1],
+			owner:     testUsers[1],
+			book:      testBooks[0],
+			arguments: "TestUserB, TestBook, 10",
+			buyerBal:  money.New(9000, "AUD"),
+			sellerBal: money.New(11000, "AUD"),
+			status:    false,
+		},
+		"Bid too low": {
+			seller:    testUsers[0],
+			owner:     testUsers[0],
+			buyer:     testUsers[1],
+			book:      testBooks[0],
+			status:    true,
+			buyerBal:  money.New(10000, "AUD"),
+			sellerBal: money.New(10000, "AUD"),
+			arguments: "TestUserB, TestBook, 7",
+		},
+		"Insufficient funds for bid": {
+			seller:      testUsers[0],
+			owner:       testUsers[0],
+			buyer:       testUsers[1],
+			book:        testBooks[0],
+			status:      true,
+			buyerBal:    money.New(10000, "AUD"),
+			sellerBal:   money.New(10000, "AUD"),
+			arguments:   "TestUserB, TestBook, 100000",
+			expectedErr: errors.New("Sorry, you do not have enough available funds to make that bid"),
+		},
+		"Buyer is owner": {
+			seller:      testUsers[0],
+			owner:       testUsers[0],
+			buyer:       testUsers[1],
+			book:        testBooks[0],
+			status:      true,
+			buyerBal:    money.New(10000, "AUD"),
+			sellerBal:   money.New(10000, "AUD"),
+			arguments:   "TestUserA, TestBook, 7",
+			expectedErr: errors.New("TestBook cannot be sold to TestUserA"),
+		},
+		"Book doesn't exist": {
+			seller:      testUsers[0],
+			owner:       testUsers[0],
+			buyer:       testUsers[1],
+			book:        testBooks[0],
+			status:      true,
+			buyerBal:    money.New(10000, "AUD"),
+			sellerBal:   money.New(10000, "AUD"),
+			arguments:   "TestUserA, TestBookXYZ is wrong, 7",
+			expectedErr: errors.New("No book with that title found"),
+		},
+		"Missing an argument": {
+			arguments:   "TestUserA TestBookXYZ is wrong, 7",
+			expectedErr: errors.New("Usage: bid(username, bookname, bidAmount)"),
+		},
+		"Too many arguments": {
+			arguments:   "TestUserA, TestBookXYZ is wrong, Extra, 7",
+			expectedErr: errors.New("Usage: bid(username, bookname, bidAmount)"),
+		},
+	}
+	for name, tc := range testcases {
+		// reset the users and books
+		testReset()
+		// run test
+		testErr := Bid(tc.arguments, testBooks, testUsers)
+		if tc.expectedErr != nil {
+			assert.Equalf(t, tc.expectedErr.Error(), testErr.Error(), "%s returned an incorrect error message", name)
+		} else {
+			assert.NoErrorf(t, testErr, "%s should not have an error but produced %v", name, testErr)
+			// check balances
+			// Seller
+			assert.Equalf(t, tc.sellerBal.Amount(), tc.seller.bankBal.Amount(), "%s seller balance was incorrect", name)
+			// Buyer
+			assert.Equalf(t, tc.buyerBal.Amount(), tc.buyer.bankBal.Amount(), "%s buyer balance was incorrect", name)
+			// check book ownership
+			assert.Equal(t, tc.owner, tc.book.owner, "Book ownership wasn't updated for %s", name)
+			// check book for sale status
+			assert.Equal(t, tc.status, tc.book.forSale, "Book status wasn't updated for %s", name)
+		}
+	}
 }
 
 func TestGetBookList(t *testing.T) {
