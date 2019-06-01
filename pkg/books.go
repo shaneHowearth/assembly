@@ -1,4 +1,4 @@
-package main
+package assembly
 
 import (
 	"fmt"
@@ -33,7 +33,6 @@ func (b *Book) ChangeOwner(newOwner *User) {
 	b.forSale = false
 }
 
-
 // GetBookList - Get Booklist for the named user, or for everyone
 func GetBookList(username string, bookList []*Book, userList []*User) string {
 	var bookString string
@@ -58,8 +57,8 @@ func GetBookList(username string, bookList []*Book, userList []*User) string {
 	return bookString
 }
 
-// Bid - 
-func Bid(arg string, bookList []*Book, userList []*User) (err error) {
+// Bid -
+func Bid(arg string, bookList []*Book, userList []*User, transactionList []*Transaction) (err error) {
 	argList := strings.Split(arg, ",")
 	argLength := len(argList)
 	if argLength == 3 {
@@ -80,7 +79,7 @@ func Bid(arg string, bookList []*Book, userList []*User) (err error) {
 		if err != nil {
 			return err
 		}
-		return u.BuyBook(wantedBook, bidAmount)
+		return u.BuyBook(wantedBook, bidAmount, transactionList)
 	}
 
 	return fmt.Errorf("Usage: bid(username, bookname, bidAmount)")

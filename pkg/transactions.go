@@ -1,4 +1,4 @@
-package main
+package assembly
 
 import (
 	"strings"
@@ -15,14 +15,14 @@ type Transaction struct {
 }
 
 // GetTransactions -
-func GetTransactions() (s string) {
-	for _, v := range transactions {
+func GetTransactions(transactionList []*Transaction) (s string) {
+	for _, v := range transactionList {
 		s += strings.Join([]string{v.date.Format(time.RFC3339), v.first.name, v.tType, v.value, "to", v.second.name, "\n"}, " ")
 	}
 	return s
 }
 
 // CreateTransaction -
-func CreateTransaction(first, second *User, tType, val string) {
-	transactions = append(transactions, &Transaction{date: time.Now(), first: first, second: second, value: val, tType: tType})
+func CreateTransaction(first, second *User, tType, val string, transactionList []*Transaction) {
+	transactionList = append(transactionList, &Transaction{date: time.Now(), first: first, second: second, value: val, tType: tType})
 }
