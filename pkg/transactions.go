@@ -17,7 +17,7 @@ type Transaction struct {
 // GetTransactions -
 func GetTransactions(transactionList []*Transaction) (s string) {
 	for _, v := range transactionList {
-		s += strings.Join([]string{v.date.Format(time.RFC3339), v.first.name, v.tType, v.value, "to", v.second.name, "\n"}, " ")
+		s += strings.Join([]string{v.date.Format(time.RFC3339), v.first.Name, v.tType, v.value, "to", v.second.Name, "\n"}, " ")
 	}
 	return s
 }

@@ -10,20 +10,20 @@ import (
 
 // User -
 type User struct {
-	name    string
-	bankBal *money.Money
+	Name    string
+	BankBal *money.Money
 }
 
 // PayMoney - pay money from this user instance' account to the nnamed user
 func (u *User) PayMoney(payee *User, amount *money.Money, transactionList []*Transaction) (err error) {
-	u.bankBal, err = u.bankBal.Subtract(amount)
+	u.BankBal, err = u.BankBal.Subtract(amount)
 	if err != nil {
 		return err
 	}
-	payee.bankBal, err = payee.bankBal.Add(amount)
+	payee.BankBal, err = payee.BankBal.Add(amount)
 	if err != nil {
 		// Roll back the subtraction
-		u.bankBal, err = u.bankBal.Add(amount)
+		u.BankBal, err = u.BankBal.Add(amount)
 		return err
 	}
 	CreateTransaction(u, payee, "paid", strconv.FormatFloat(float64(amount.Amount()/100), 'f', 2, 64), transactionList)
@@ -37,28 +37,28 @@ func (u *User) BuyBook(wantedBook *Book, bidValue int64, transactionList []*Tran
 		return
 	}
 
-	if wantedBook.owner != u && wantedBook.forSale {
+	if wantedBook.Owner != u && wantedBook.ForSale {
 		// check bidder has the money to spend
-		if u.bankBal.Amount() < bidValue {
+		if u.BankBal.Amount() < bidValue {
 			return fmt.Errorf("Sorry, you do not have enough available funds to make that bid")
 		}
 		// The bid must be equal to or higher than the asking price
-		if bidValue >= (wantedBook.price.Amount()) {
+		if bidValue >= (wantedBook.Price.Amount()) {
 
 			// pay monies
-			err = u.PayMoney(wantedBook.owner, money.New(bidValue, "AUD"), transactionList)
+			err = u.PayMoney(wantedBook.Owner, money.New(bidValue, "AUD"), transactionList)
 			if err != nil {
 				return fmt.Errorf("Unable to make payment with error: %v", err)
 			}
 			// transfer ownership
-			CreateTransaction(wantedBook.owner, u, "sold", wantedBook.title, transactionList)
+			CreateTransaction(wantedBook.Owner, u, "sold", wantedBook.Title, transactionList)
 			wantedBook.ChangeOwner(u)
-			fmt.Printf("Congratulations, your bid was successful. You are now the new owner of %s\n", wantedBook.title)
+			fmt.Printf("Congratulations, your bid was successful. You are now the new owner of %s\n", wantedBook.Title)
 		} else {
 			fmt.Println("Sorry, your bid was unsuccessful")
 		}
 	} else {
-		return fmt.Errorf("%s cannot be sold to %s", wantedBook.title, u.name)
+		return fmt.Errorf("%s cannot be sold to %s", wantedBook.Title, u.Name)
 	}
 
 	return
@@ -67,7 +67,7 @@ func (u *User) BuyBook(wantedBook *Book, bidValue int64, transactionList []*Tran
 // FindUser - Find user by name (case insensitive)
 func FindUser(username string, userList []*User) (*User, error) {
 	for _, v := range userList {
-		if strings.ToLower(v.name) == strings.Trim(strings.ToLower(username), " ") {
+		if strings.ToLower(v.Name) == strings.Trim(strings.ToLower(username), " ") {
 			return v, nil
 		}
 	}
@@ -79,7 +79,7 @@ func GetBankBalance(username string, userList []*User) (string, error) {
 	if username == "" {
 		var everyone string
 		for _, v := range userList {
-			everyone += fmt.Sprintf("%s - %d\n", v.name, v.bankBal.Amount()/100)
+			everyone += fmt.Sprintf("%s - %d\n", v.Name, v.BankBal.Amount()/100)
 		}
 		return everyone, nil
 	}
@@ -87,5 +87,5 @@ func GetBankBalance(username string, userList []*User) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("Not found")
 	}
-	return strconv.FormatInt(foundUser.bankBal.Amount()/100, 10) + "\n", nil
+	return strconv.FormatInt(foundUser.BankBal.Amount()/100, 10) + "\n", nil
 }

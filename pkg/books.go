@@ -10,16 +10,16 @@ import (
 
 // Book -
 type Book struct {
-	title   string
-	forSale bool
-	price   *money.Money
-	owner   *User
+	Title   string
+	ForSale bool
+	Price   *money.Money
+	Owner   *User
 }
 
 // GetBook - get a book using a case insensitive search
 func GetBook(bookname string, bookList []*Book) (b *Book) {
 	for _, bval := range bookList {
-		if strings.ToLower(bval.title) == strings.ToLower(strings.Trim(bookname, " ")) {
+		if strings.ToLower(bval.Title) == strings.ToLower(strings.Trim(bookname, " ")) {
 			b = bval
 			break
 		}
@@ -29,8 +29,8 @@ func GetBook(bookname string, bookList []*Book) (b *Book) {
 
 // ChangeOwner -
 func (b *Book) ChangeOwner(newOwner *User) {
-	b.owner = newOwner
-	b.forSale = false
+	b.Owner = newOwner
+	b.ForSale = false
 }
 
 // GetBookList - Get Booklist for the named user, or for everyone
@@ -39,8 +39,8 @@ func GetBookList(username string, bookList []*Book, userList []*User) string {
 	if username == "" {
 		// All the books that are currently for sale
 		for _, book := range bookList {
-			if book.forSale {
-				bookString += fmt.Sprintf("%s\n", book.title)
+			if book.ForSale {
+				bookString += fmt.Sprintf("%s\n", book.Title)
 			}
 		}
 	} else {
@@ -49,8 +49,8 @@ func GetBookList(username string, bookList []*Book, userList []*User) string {
 			return "User not found"
 		}
 		for _, book := range bookList {
-			if book.owner == u {
-				bookString += fmt.Sprintf("%s\n", book.title)
+			if book.Owner == u {
+				bookString += fmt.Sprintf("%s\n", book.Title)
 			}
 		}
 	}

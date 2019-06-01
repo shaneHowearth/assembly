@@ -8,12 +8,13 @@ import (
 	"strings"
 
 	money "github.com/Rhymond/go-money"
+	assembly "github.com/shanehowearth/assemblyPayments/pkg"
 )
 
 var (
-	transactions []*Transaction
-	users        []*User
-	books        []*Book
+	transactions []*assembly.Transaction
+	users        []*assembly.User
+	books        []*assembly.Book
 )
 
 func init() {
@@ -21,22 +22,22 @@ func init() {
 	// eg. 100 == $1
 	// The currency 'type' needs to be consistent if you want to
 	// use multiple values together (eg. addition, subtraction... etc)
-	users = []*User{
-		&User{"Bob", money.New(10000, "AUD")},
-		&User{"Kelly", money.New(10000, "AUD")},
+	users = []*assembly.User{
+		&assembly.User{Name: "Bob", BankBal: money.New(10000, "AUD")},
+		&assembly.User{Name: "Kelly", BankBal: money.New(10000, "AUD")},
 	}
-	books = []*Book{
-		&Book{
-			title:   "CrazyTown",
-			forSale: true,
-			price:   money.New(1000, "AUD"),
-			owner:   users[0],
+	books = []*assembly.Book{
+		&assembly.Book{
+			Title:   "CrazyTown",
+			ForSale: true,
+			Price:   money.New(1000, "AUD"),
+			Owner:   users[0],
 		},
-		&Book{
-			title:   "The Go Programming Language",
-			forSale: false,
-			price:   money.New(1200, "AUD"),
-			owner:   users[0],
+		&assembly.Book{
+			Title:   "The Go Programming Language",
+			ForSale: false,
+			Price:   money.New(1200, "AUD"),
+			Owner:   users[0],
 		},
 	}
 }
@@ -65,19 +66,19 @@ func ui() {
 		case "help":
 			Help()
 		case "bal":
-			vals, err := GetBankBalance(arg, users)
+			vals, err := assembly.GetBankBalance(arg, users)
 			if err != nil {
 				fmt.Println(err)
 			} else {
 				fmt.Print(vals)
 			}
 		case "bid":
-			err := Bid(arg, books, users)
+			err := assembly.Bid(arg, books, users, transactions)
 			if err != nil {
 				fmt.Println(err)
 			}
 		case "books":
-			fmt.Print(GetBookList(arg, books, users))
+			fmt.Print(assembly.GetBookList(arg, books, users))
 		case "exit":
 			os.Exit(0)
 		}
