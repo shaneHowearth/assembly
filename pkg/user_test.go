@@ -30,7 +30,7 @@ func TestGetBankBalance(t *testing.T) {
 			err:      fmt.Errorf("Not found"),
 		},
 		"Empty": {
-			response: "Bob - 100\nKelly - 100\n",
+			response: "TestUserA - 100\nTestUserB - 100\n",
 		},
 	}
 	for name, tc := range testcases {
