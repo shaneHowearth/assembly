@@ -3,7 +3,8 @@ package assembly_test
 import (
 	"testing"
 
-	assembly "github.com/shanehowearth/assemblyPayments/pkg"
+	assembly "assemblyPayments/pkg"
+
 	"github.com/stretchr/testify/assert"
 )
 

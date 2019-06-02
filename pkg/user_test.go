@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	money "github.com/Rhymond/go-money"
-	assembly "github.com/shanehowearth/assemblyPayments/pkg"
+	assembly "assemblyPayments/pkg"
 	"github.com/stretchr/testify/assert"
 )
 

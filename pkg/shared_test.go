@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	money "github.com/Rhymond/go-money"
-	assembly "github.com/shanehowearth/assemblyPayments/pkg"
+	assembly "assemblyPayments/pkg"
 )
 
 func TestMain(m *testing.M) {

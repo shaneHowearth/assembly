@@ -7,8 +7,9 @@ import (
 	"regexp"
 	"strings"
 
+	assembly "assemblyPayments/pkg"
+
 	money "github.com/Rhymond/go-money"
-	assembly "github.com/shanehowearth/assemblyPayments/pkg"
 )
 
 var (

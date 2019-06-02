@@ -1,6 +1,6 @@
 package assembly_test
 
-import assembly "github.com/shanehowearth/assemblyPayments/pkg"
+import assembly "assemblyPayments/pkg"
 
 func ExampleHelp() {
 	assembly.Help()
