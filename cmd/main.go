@@ -64,7 +64,7 @@ func ui() {
 		}
 		switch com := strings.ToLower(c[0]); com {
 		case "help":
-			Help()
+			assembly.Help()
 		case "bal":
 			vals, err := assembly.GetBankBalance(arg, users)
 			if err != nil {
@@ -88,18 +88,4 @@ func ui() {
 	if scanner.Err() != nil {
 		os.Exit(1)
 	}
-}
-
-// Help -
-func Help() {
-	fmt.Println(`
-Available commands:
-   Help - Prints this message.
-   Bal - Gets the current bank balances.
-       If a name is given then only the bank balance for that person.
-   Bid - Bid for a book.
-       Give the name of the person bidding, the name of the book they are bidding for, and the amount that they are bidding. If successful the book will change ownership, and the money paid from the bidder's wallet to the seller's.
-   Books - List all the books for sale, or all of the books owned by the given name.
-   Exit - Exits this program.`)
-
 }
