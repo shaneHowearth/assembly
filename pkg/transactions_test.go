@@ -45,7 +45,6 @@ func TestGetTransactions(t *testing.T) {
 		// GetTransactions returns a string.
 		// However the tests will check the transactions objects directly
 		_ = assembly.GetTransactions(&testTransactions)
-		fmt.Println(testTransactions)
 		if tc.expected {
 			assert.NotEmptyf(t, testTransactions, "%s has produced no transactions", name)
 			assert.Equal(t, tc.second.Name, testTransactions[0].First.Name, "%s has the wrong user first in the first entry", name)

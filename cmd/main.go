@@ -73,12 +73,14 @@ func ui() {
 				fmt.Print(vals)
 			}
 		case "bid":
-			err := assembly.Bid(arg, books, users, transactions)
+			err := assembly.Bid(arg, books, users, &transactions)
 			if err != nil {
 				fmt.Println(err)
 			}
 		case "books":
 			fmt.Print(assembly.GetBookList(arg, books, users))
+		case "transactions":
+			fmt.Print(assembly.GetTransactions(&transactions))
 		case "exit":
 			os.Exit(0)
 		}
