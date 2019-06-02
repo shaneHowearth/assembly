@@ -122,7 +122,7 @@ func TestBid(t *testing.T) {
 		// reset the users and books
 		testReset()
 		// run test
-		testErr := assembly.Bid(tc.arguments, testBooks, testUsers, transactions)
+		testErr := assembly.Bid(tc.arguments, testBooks, testUsers, &testTransactions)
 		if tc.expectedErr != nil {
 			assert.Equalf(t, tc.expectedErr.Error(), testErr.Error(), "%s returned an incorrect error message", name)
 		} else {

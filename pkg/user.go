@@ -15,7 +15,7 @@ type User struct {
 }
 
 // PayMoney - pay money from this user instance' account to the nnamed user
-func (u *User) PayMoney(payee *User, amount *money.Money, transactionList []*Transaction) (err error) {
+func (u *User) PayMoney(payee *User, amount *money.Money, transactionList *[]*Transaction) (err error) {
 	u.BankBal, err = u.BankBal.Subtract(amount)
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func (u *User) PayMoney(payee *User, amount *money.Money, transactionList []*Tra
 }
 
 // BuyBook -
-func (u *User) BuyBook(wantedBook *Book, bidValue int64, transactionList []*Transaction) (err error) {
+func (u *User) BuyBook(wantedBook *Book, bidValue int64, transactionList *[]*Transaction) (err error) {
 	if wantedBook == nil {
 		fmt.Println("No book found by that name, are you sure you typed it in correctly?")
 		return

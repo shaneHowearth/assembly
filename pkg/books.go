@@ -58,7 +58,7 @@ func GetBookList(username string, bookList []*Book, userList []*User) string {
 }
 
 // Bid -
-func Bid(arg string, bookList []*Book, userList []*User, transactionList []*Transaction) (err error) {
+func Bid(arg string, bookList []*Book, userList []*User, transactionList *[]*Transaction) (err error) {
 	argList := strings.Split(arg, ",")
 	argLength := len(argList)
 	if argLength == 3 {

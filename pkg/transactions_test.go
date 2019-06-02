@@ -41,22 +41,23 @@ func TestGetTransactions(t *testing.T) {
 		testReset()
 		// create a tranasaction
 		arguments := fmt.Sprintf("%s, %s, %s", tc.second.Name, tc.testbook.Title, tc.amount1)
-		_ = assembly.Bid(arguments, testBooks, testUsers, transactions)
+		_ = assembly.Bid(arguments, testBooks, testUsers, &testTransactions)
 		// GetTransactions returns a string.
 		// However the tests will check the transactions objects directly
-		_ = assembly.GetTransactions(transactions)
+		_ = assembly.GetTransactions(&testTransactions)
+		fmt.Println(testTransactions)
 		if tc.expected {
-			assert.NotEmptyf(t, transactions, "%s has produced no transactions", name)
-			assert.Equal(t, tc.second.Name, transactions[0].First.Name, "%s has the wrong user first in the first entry", name)
-			assert.Equal(t, tc.first.Name, transactions[0].Second.Name, "%s has the wrong user second in the first entry", name)
-			assert.Equal(t, tc.amount1, transactions[0].Value, "%s has the wrong value in the first entry", name)
-			assert.Equal(t, tc.tType1, transactions[0].TType, "%s has the wrong transaction type in the first entry", name)
-			assert.Equal(t, tc.first.Name, transactions[1].First.Name, "%s has the wrong user first in the second entry", name)
-			assert.Equal(t, tc.second.Name, transactions[1].Second.Name, "%s has the wrong user second in the second entry", name)
-			assert.Equal(t, tc.amount2, transactions[1].Value, "%s has the wrong value in the second entry", name)
-			assert.Equal(t, tc.tType2, transactions[1].TType, "%s has the wrong transaction type in the second entry", name)
+			assert.NotEmptyf(t, testTransactions, "%s has produced no transactions", name)
+			assert.Equal(t, tc.second.Name, testTransactions[0].First.Name, "%s has the wrong user first in the first entry", name)
+			assert.Equal(t, tc.first.Name, testTransactions[0].Second.Name, "%s has the wrong user second in the first entry", name)
+			assert.Equal(t, tc.amount1, testTransactions[0].Value, "%s has the wrong value in the first entry", name)
+			assert.Equal(t, tc.tType1, testTransactions[0].TType, "%s has the wrong transaction type in the first entry", name)
+			assert.Equal(t, tc.first.Name, testTransactions[1].First.Name, "%s has the wrong user first in the second entry", name)
+			assert.Equal(t, tc.second.Name, testTransactions[1].Second.Name, "%s has the wrong user second in the second entry", name)
+			assert.Equal(t, tc.amount2, testTransactions[1].Value, "%s has the wrong value in the second entry", name)
+			assert.Equal(t, tc.tType2, testTransactions[1].TType, "%s has the wrong transaction type in the second entry", name)
 		} else {
-			assert.Emptyf(t, transactions, "%s has produced transactions when none were expected", name)
+			assert.Emptyf(t, testTransactions, "%s has produced transactions when none were expected", name)
 
 		}
 	}
